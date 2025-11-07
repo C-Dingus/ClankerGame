@@ -1,15 +1,15 @@
-# Eldoria: The Crystal of Souls
+# Coral Kingdom: The Pearl of Tides
 
 ## Overview
-Eldoria: The Crystal of Souls is a text-based roleplaying game inspired by classic adventures like Zork and Colossal Cave Adventure. Embark on an epic quest to save the world from corruption, making choices that shape your destiny and determine the fate of Eldoria.
+Coral Kingdom: The Pearl of Tides is a text-based roleplaying game set in a vibrant underwater world. Embark on an aquatic adventure as a marine creature to restore balance to the ocean, making choices that shape your destiny and determine the fate of the Coral Kingdom.
 
 ## Features
-- **Character Creation**: Choose from Warrior, Mage, or Rogue classes with unique stats and abilities
-- **Branching Storyline**: Multiple paths through diverse locations including haunted forests, enchanted castles, and dragon lairs
-- **Turn-Based Combat**: Strategic combat system with attacks, magic, items, and fleeing
-- **Inventory Management**: Collect and use items that affect gameplay
+- **Marine Character Creation**: Choose from Hammerhead Warrior, Octopus Mage, or Dolphin Rogue species with unique stats and abilities
+- **Branching Underwater Storyline**: Multiple paths through diverse aquatic locations including coral mazes, sunken ships, and deep trenches
+- **Aquatic Combat System**: Strategic combat with marine-themed attacks, magic, items, and escape maneuvers
+- **Ocean Inventory Management**: Collect and use marine items that affect gameplay
 - **Multiple Endings**: Three distinct endings based on your choices throughout the game
-- **Error Handling**: Robust input validation and error management
+- **Error Handling**: Robust input validation and error management for smooth gameplay
 
 ## How to Run
 ### Requirements
@@ -18,9 +18,9 @@ Eldoria: The Crystal of Souls is a text-based roleplaying game inspired by class
 
 ### Installation
 1. Ensure Python is installed on your system
-2. Download the `eldoria_game.py` file
+2. Download the `coral_kingdom.py` file
 3. Open a terminal/command prompt in the directory containing the game file
 
 ### Running the Game
 ```bash
-python eldoria_game.py
+python coral_kingdom.py
