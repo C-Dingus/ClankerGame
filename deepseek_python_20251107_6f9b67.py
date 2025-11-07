@@ -1,6 +1,6 @@
 """
-Eldoria: The Crystal of Souls
-A text-based RPG adventure game
+Coral Kingdom: The Pearl of Tides
+A text-based RPG adventure set in an underwater world
 Generated entirely by AI
 """
 
@@ -8,76 +8,80 @@ import random
 import time
 import sys
 
-class Player:
-    """Player class to handle character creation, stats, and inventory"""
+class MarineCreature:
+    """Player class as a marine creature with aquatic abilities"""
     
     def __init__(self):
         self.name = ""
-        self.character_class = ""
+        self.species = ""
         self.strength = 0
         self.agility = 0
         self.magic = 0
         self.health = 100
         self.max_health = 100
         self.inventory = []
-        self.current_area = "Village of Beginnings"
+        self.current_location = "Kelp Forest Village"
         self.quest_progress = 0
         self.choices_made = []
+        self.ocean_knowledge = 0  # New stat for reef wisdom
     
     def create_character(self):
-        """Handle character creation process"""
-        print("\n=== CHARACTER CREATION ===")
-        self.name = input("What is your name, adventurer? ")
+        """Handle character creation process for marine species"""
+        print("\n" + "="*40)
+        print("    CORAL KINGDOM: THE PEARL OF TIDES")
+        print("="*40)
+        self.name = input("\nWhat is your name, young sea creature? ")
         
-        print(f"\nWelcome, {self.name}! Choose your path:")
-        print("1. Warrior - Master of combat with high Strength")
-        print("2. Mage - Weaver of spells with high Magic")
-        print("3. Rogue - Shadow walker with high Agility")
+        print(f"\nWelcome to the reef, {self.name}! Choose your species:")
+        print("1. Hammerhead Warrior - Powerful predator with high Strength")
+        print("2. Octopus Mage - Intelligent shape-shifter with high Magic") 
+        print("3. Dolphin Rogue - Agile swimmer with high Agility and sonar")
         
         while True:
             choice = input("\nEnter your choice (1-3): ")
             if choice == "1":
-                self.character_class = "Warrior"
+                self.species = "Hammerhead Warrior"
                 self.strength = 15
                 self.agility = 8
                 self.magic = 5
-                self.inventory = ["Iron Sword", "Health Potion"]
+                self.inventory = ["Razor-Sharp Fin", "Seaweed Bandage", "Coral Knife"]
                 break
             elif choice == "2":
-                self.character_class = "Mage"
+                self.species = "Octopus Mage"
                 self.strength = 5
                 self.agility = 8
                 self.magic = 15
-                self.inventory = ["Oak Staff", "Mana Potion", "Health Potion"]
+                self.inventory = ["Ink Sac", "Glowing Pearl", "Seaweed Bandage"]
                 break
             elif choice == "3":
-                self.character_class = "Rogue"
+                self.species = "Dolphin Rogue"
                 self.strength = 8
                 self.agility = 15
                 self.magic = 5
-                self.inventory = ["Dagger", "Lockpicks", "Health Potion"]
+                self.inventory = ["Sonar Blast", "Shell Lockpicks", "Seaweed Bandage"]
                 break
             else:
                 print("Invalid choice. Please enter 1, 2, or 3.")
         
-        print(f"\nExcellent! You are now a {self.character_class}!")
+        print(f"\nExcellent! You are now a {self.species}!")
         self.display_stats()
     
     def display_stats(self):
-        """Display current player stats"""
-        print(f"\n=== {self.name.upper()} THE {self.character_class.upper()} ===")
+        """Display current marine creature stats"""
+        print(f"\n=== {self.name.upper()} THE {self.species.upper()} ===")
         print(f"Health: {self.health}/{self.max_health}")
         print(f"Strength: {self.strength}")
         print(f"Agility: {self.agility}")
         print(f"Magic: {self.magic}")
+        print(f"Ocean Knowledge: {self.ocean_knowledge}")
     
     def display_inventory(self):
-        """Show player's inventory"""
+        """Show creature's inventory"""
         if not self.inventory:
-            print("\nYour inventory is empty.")
+            print("\nYour treasure pouch is empty.")
             return
         
-        print("\n=== INVENTORY ===")
+        print("\n=== OCEAN TREASURES ===")
         for i, item in enumerate(self.inventory, 1):
             print(f"{i}. {item}")
     
@@ -85,84 +89,89 @@ class Player:
         """Use an item from inventory"""
         try:
             item = self.inventory[item_index]
-            if "Health Potion" in item:
+            if "Seaweed Bandage" in item:
                 heal_amount = 30
                 self.health = min(self.max_health, self.health + heal_amount)
-                print(f"You used a Health Potion and recovered {heal_amount} HP!")
+                print(f"You used a Seaweed Bandage and recovered {heal_amount} HP!")
                 self.inventory.pop(item_index)
-            elif "Mana Potion" in item:
-                print("You feel magical energy flowing through you!")
+            elif "Glowing Pearl" in item:
+                self.magic += 2
+                print("The Glowing Pearl enhances your magical abilities temporarily!")
+                self.inventory.pop(item_index)
+            elif "Coral Elixir" in item:
+                self.health = self.max_health
+                print("The Coral Elixir fully restores your health!")
                 self.inventory.pop(item_index)
             else:
                 print(f"You examine the {item}, but cannot use it right now.")
         except IndexError:
             print("Invalid item selection.")
 
-class CombatSystem:
-    """Handle turn-based combat encounters"""
+class AquaticCombat:
+    """Handle turn-based aquatic combat encounters"""
     
     def __init__(self, player):
         self.player = player
-        self.enemies = []
-        self.current_enemy = None
+        self.current_predator = None
     
-    def start_combat(self, enemy_name, enemy_health, enemy_damage):
-        """Initialize combat with an enemy"""
-        self.current_enemy = {
-            "name": enemy_name,
-            "health": enemy_health,
-            "max_health": enemy_health,
-            "damage": enemy_damage
+    def start_combat(self, predator_name, predator_health, predator_damage, special_ability=None):
+        """Initialize combat with an aquatic predator"""
+        self.current_predator = {
+            "name": predator_name,
+            "health": predator_health,
+            "max_health": predator_health,
+            "damage": predator_damage,
+            "special": special_ability
         }
         
-        print(f"\n⚔️ COMBAT STARTED! ⚔️")
-        print(f"You encounter a {enemy_name}!")
+        print(f"\n🌊 AQUATIC COMBAT! 🌊")
+        print(f"You face a {predator_name}!")
         
-        while self.current_enemy and self.current_enemy["health"] > 0 and self.player.health > 0:
+        while self.current_predator and self.current_predator["health"] > 0 and self.player.health > 0:
             self.combat_turn()
         
         if self.player.health <= 0:
-            print("\nYou have been defeated...")
+            print("\nYou have been defeated by the ocean's dangers...")
             return False
         else:
-            print(f"\nYou defeated the {enemy_name}!")
+            print(f"\nYou defeated the {predator_name}!")
             return True
     
     def combat_turn(self):
-        """Handle one turn of combat"""
+        """Handle one turn of aquatic combat"""
         print(f"\n--- Your Turn ---")
         print(f"Your HP: {self.player.health}")
-        print(f"{self.current_enemy['name']} HP: {self.current_enemy['health']}")
+        print(f"{self.current_predator['name']} HP: {self.current_predator['health']}")
         
         print("\nChoose your action:")
         print("1. Attack")
         print("2. Defend")
-        print("3. Use Magic")
-        print("4. Use Item")
-        print("5. Flee")
+        print("3. Use Aquatic Magic")
+        print("4. Use Ocean Item")
+        print("5. Flee to Safety")
         
         choice = input("\nEnter your choice (1-5): ")
         
         if choice == "1":
-            self.attack()
+            self.aquatic_attack()
         elif choice == "2":
             self.defend()
         elif choice == "3":
-            self.use_magic()
+            self.use_aquatic_magic()
         elif choice == "4":
             self.use_item_combat()
         elif choice == "5":
             if self.flee():
                 return
         else:
-            print("Invalid choice! You hesitate and lose your turn.")
+            print("Invalid choice! You hesitate in the currents.")
         
-        # Enemy attack if still alive
-        if self.current_enemy and self.current_enemy["health"] > 0:
-            self.enemy_attack()
+        # Predator attack if still alive
+        if self.current_predator and self.current_predator["health"] > 0:
+            self.predator_attack()
     
-    def attack(self):
-        """Player attacks the enemy"""
+    def aquatic_attack(self):
+        """Player attacks the predator"""
         base_damage = self.player.strength // 2
         damage = max(1, base_damage + random.randint(-2, 3))
         
@@ -170,50 +179,56 @@ class CombatSystem:
         crit_chance = self.player.agility / 100
         if random.random() < crit_chance:
             damage *= 2
-            print(f"Critical hit! You strike the {self.current_enemy['name']} for {damage} damage!")
+            print(f"Critical strike! You attack the {self.current_predator['name']} for {damage} damage!")
         else:
-            print(f"You attack the {self.current_enemy['name']} for {damage} damage!")
+            print(f"You attack the {self.current_predator['name']} for {damage} damage!")
         
-        self.current_enemy["health"] -= damage
+        self.current_predator["health"] -= damage
     
     def defend(self):
         """Player defends, reducing incoming damage"""
-        print("You take a defensive stance, preparing for the enemy's attack.")
-        # Defense bonus will be applied in enemy_attack
+        print("You take a defensive position among the coral, preparing for the predator's attack.")
     
-    def use_magic(self):
-        """Player uses magic if they have sufficient magic stat"""
+    def use_aquatic_magic(self):
+        """Player uses aquatic magic if they have sufficient magic stat"""
         if self.player.magic < 8:
-            print("Your magic ability is too weak to cast spells!")
+            print("Your magical connection to the ocean is too weak!")
             return
         
-        print("\nChoose a spell:")
-        print("1. Fireball (Cost: 5 Magic Power)")
-        print("2. Heal (Cost: 8 Magic Power)")
+        print("\nChoose an aquatic spell:")
+        print("1. Electric Shock (Cost: 5 Magic Power)")
+        print("2. Healing Currents (Cost: 8 Magic Power)")
+        print("3. Ink Cloud (Cost: 3 Magic Power) - Octopus only")
         
-        spell_choice = input("Enter your choice (1-2): ")
+        spell_choice = input("Enter your choice (1-3): ")
         
         if spell_choice == "1":
             if self.player.magic >= 5:
                 damage = self.player.magic + random.randint(3, 8)
-                self.current_enemy["health"] -= damage
-                print(f"You cast Fireball on the {self.current_enemy['name']} for {damage} damage!")
+                self.current_predator["health"] -= damage
+                print(f"You zap the {self.current_predator['name']} with an Electric Shock for {damage} damage!")
             else:
                 print("You don't have enough magic power!")
         elif spell_choice == "2":
             if self.player.magic >= 8:
                 heal = self.player.magic // 2 + random.randint(5, 15)
                 self.player.health = min(self.player.max_health, self.player.health + heal)
-                print(f"You cast Heal and recover {heal} HP!")
+                print(f"You summon Healing Currents and recover {heal} HP!")
+            else:
+                print("You don't have enough magic power!")
+        elif spell_choice == "3" and self.player.species == "Octopus Mage":
+            if self.player.magic >= 3:
+                print("You release an Ink Cloud, confusing the predator and reducing their next attack!")
+                # Special effect would be implemented here
             else:
                 print("You don't have enough magic power!")
         else:
-            print("Invalid spell choice!")
+            print("Invalid spell choice or species restriction!")
     
     def use_item_combat(self):
         """Use items during combat"""
         if not self.player.inventory:
-            print("You have no items to use!")
+            print("You have no ocean treasures to use!")
             return
         
         self.player.display_inventory()
@@ -227,376 +242,410 @@ class CombatSystem:
     
     def flee(self):
         """Attempt to flee from combat"""
-        flee_chance = self.player.agility / 20  # Higher agility = better flee chance
+        flee_chance = self.player.agility / 20
         if random.random() < flee_chance:
-            print("You successfully flee from combat!")
-            self.current_enemy = None
+            print("You successfully swim to safety!")
+            self.current_predator = None
             return True
         else:
-            print("You failed to escape!")
+            print("The predator blocks your escape route!")
             return False
     
-    def enemy_attack(self):
-        """Enemy attacks the player"""
-        if not self.current_enemy:
+    def predator_attack(self):
+        """Predator attacks the player"""
+        if not self.current_predator:
             return
         
-        damage = self.current_enemy["damage"] + random.randint(-2, 2)
+        damage = self.current_predator["damage"] + random.randint(-2, 2)
         damage = max(1, damage)
         
-        # Check if player was defending
-        if random.random() < 0.3:  # 30% chance player was still defending
-            damage = damage // 2
-            print(f"The {self.current_enemy['name']} attacks, but your defense reduces the damage to {damage}!")
+        # Special abilities
+        if self.current_predator["special"] == "venom" and random.random() < 0.3:
+            damage += 3
+            print(f"The {self.current_predator['name']} uses venomous strike for {damage} damage!")
+        elif self.current_predator["special"] == "constrict" and random.random() < 0.25:
+            damage += 2
+            print(f"The {self.current_predator['name']} constricts you for {damage} damage!")
         else:
-            print(f"The {self.current_enemy['name']} attacks you for {damage} damage!")
+            print(f"The {self.current_predator['name']} attacks you for {damage} damage!")
         
         self.player.health -= damage
 
-class GameWorld:
-    """Manage the game world, areas, and story progression"""
+class ReefWorld:
+    """Manage the coral reef world, locations, and story progression"""
     
     def __init__(self, player):
         self.player = player
-        self.areas = {
-            "Village of Beginnings": {
-                "description": "A quiet village where your journey begins. Smoke rises from chimneys and villagers go about their daily business.",
-                "connections": ["Haunted Forest"],
+        self.locations = {
+            "Kelp Forest Village": {
+                "description": "A vibrant village built among towering kelp forests. Colorful fish dart between the fronds as ancient sea turtles watch over the community.",
+                "connections": ["Coral Maze", "Sunken Galleon"],
                 "completed": False
             },
-            "Haunted Forest": {
-                "description": "A dense, misty forest filled with ancient trees and eerie sounds. Strange creatures lurk in the shadows.",
-                "connections": ["Village of Beginnings", "Enchanted Castle", "Bandit's Lair"],
+            "Coral Maze": {
+                "description": "A labyrinth of breathtaking coral formations in every color imaginable. The twisting paths are easy to get lost in, and predators lurk in the shadows.",
+                "connections": ["Kelp Forest Village", "Abyssal Trench", "Volcanic Vents"],
                 "completed": False
             },
-            "Enchanted Castle": {
-                "description": "A magnificent castle floating on clouds, home to powerful magic and ancient secrets.",
-                "connections": ["Haunted Forest", "Crystal Sanctum"],
+            "Sunken Galleon": {
+                "description": "The wreck of an ancient surface-dweller ship, now home to curious fish and hidden treasures. Barnacles and coral encrust the wooden hull.",
+                "connections": ["Kelp Forest Village", "Giant Clam Gardens"],
                 "completed": False
             },
-            "Bandit's Lair": {
-                "description": "A hidden camp of ruthless bandits preying on travelers. Treasure and danger await.",
-                "connections": ["Haunted Forest", "Dragon's Peak"],
+            "Abyssal Trench": {
+                "description": "A dark, deep trench where sunlight barely reaches. Glowing creatures provide the only illumination in this mysterious depth.",
+                "connections": ["Coral Maze", "Kraken's Lair"],
                 "completed": False
             },
-            "Dragon's Peak": {
-                "description": "A volcanic mountain where the ancient dragon Vermithrax guards his hoard. The air smells of sulfur and ash.",
-                "connections": ["Bandit's Lair"],
+            "Volcanic Vents": {
+                "description": "Hydrothermal vents spew mineral-rich water, creating an oasis of strange lifeforms. The water is warm and tinged with sulfur.",
+                "connections": ["Coral Maze", "Leviathan's Domain"],
                 "completed": False
             },
-            "Crystal Sanctum": {
-                "description": "The final chamber where the Crystal of Souls pulses with unimaginable power. Your destiny awaits.",
-                "connections": ["Enchanted Castle"],
+            "Giant Clam Gardens": {
+                "description": "A field of enormous clams, some large enough to swallow a dolphin whole. Pearls of incredible size gleam within.",
+                "connections": ["Sunken Galleon"],
+                "completed": False
+            },
+            "Kraken's Lair": {
+                "description": "A cave formed from ancient coral and rock, filled with the bones of the Kraken's prey. The water feels heavy with ancient power.",
+                "connections": ["Abyssal Trench"],
+                "completed": False
+            },
+            "Leviathan's Domain": {
+                "description": "The territory of the ancient Leviathan, where the Pearl of Tides rests. The water hums with primordial energy.",
+                "connections": ["Volcanic Vents"],
                 "completed": False
             }
         }
-        self.combat_system = CombatSystem(player)
+        self.combat_system = AquaticCombat(player)
     
-    def display_current_area(self):
-        """Show description of current area"""
-        area = self.areas[self.player.current_area]
-        print(f"\n=== {self.player.current_area.upper()} ===")
-        print(area["description"])
+    def display_current_location(self):
+        """Show description of current location"""
+        location = self.locations[self.player.current_location]
+        print(f"\n=== {self.player.current_location.upper()} ===")
+        print(location["description"])
         
-        if not area["completed"]:
-            self.handle_area_encounter()
-            area["completed"] = True
+        if not location["completed"]:
+            self.handle_location_encounter()
+            location["completed"] = True
     
-    def handle_area_encounter(self):
-        """Handle unique encounters for each area"""
-        area = self.player.current_area
+    def handle_location_encounter(self):
+        """Handle unique encounters for each location"""
+        location = self.player.current_location
         
-        if area == "Village of Beginnings":
-            self.village_encounter()
-        elif area == "Haunted Forest":
-            self.forest_encounter()
-        elif area == "Enchanted Castle":
-            self.castle_encounter()
-        elif area == "Bandit's Lair":
-            self.bandit_encounter()
-        elif area == "Dragon's Peak":
-            self.dragon_encounter()
-        elif area == "Crystal Sanctum":
-            self.sanctum_encounter()
+        if location == "Kelp Forest Village":
+            self.kelp_forest_encounter()
+        elif location == "Coral Maze":
+            self.coral_maze_encounter()
+        elif location == "Sunken Galleon":
+            self.sunken_galleon_encounter()
+        elif location == "Abyssal Trench":
+            self.abyssal_trench_encounter()
+        elif location == "Volcanic Vents":
+            self.volcanic_vents_encounter()
+        elif location == "Giant Clam Gardens":
+            self.clam_gardens_encounter()
+        elif location == "Kraken's Lair":
+            self.kraken_encounter()
+        elif location == "Leviathan's Domain":
+            self.leviathan_encounter()
     
-    def village_encounter(self):
-        """Village story encounter"""
-        print("\nAn old sage approaches you:")
-        print("'Traveler! The Crystal of Souls has been corrupted by dark forces. You must journey through the Haunted Forest and seek the Enchanted Castle or confront the Bandits in their lair. Choose your path wisely.'")
+    def kelp_forest_encounter(self):
+        """Starting village encounter"""
+        print("\nAn elderly Sea Turtle approaches you slowly:")
+        print("'Young one, the Pearl of Tides has been disturbed from its resting place. The ocean's balance is shifting. You must journey through the Coral Maze and seek either the Sunken Galleon or the deeper territories. Choose your current wisely.'")
         
-        # Give player a helpful item based on class
-        if self.player.character_class == "Warrior":
-            self.player.inventory.append("Sturdy Shield")
-            print("The village blacksmith gives you a Sturdy Shield!")
-        elif self.player.character_class == "Mage":
-            self.player.inventory.append("Arcane Tome")
-            print("The village elder gives you an Arcane Tome!")
-        elif self.player.character_class == "Rogue":
-            self.player.inventory.append("Smoke Bombs")
-            print("The shady merchant gives you Smoke Bombs!")
+        # Give player a helpful item based on species
+        if self.player.species == "Hammerhead Warrior":
+            self.player.inventory.append("Reinforced Scales")
+            print("The village blacksmith gives you Reinforced Scales for protection!")
+        elif self.player.species == "Octopus Mage":
+            self.player.inventory.append("Ancient Conch")
+            print("The village elder gives you an Ancient Conch that whispers ocean secrets!")
+        elif self.player.species == "Dolphin Rogue":
+            self.player.inventory.append("Echolocation Charm")
+            print("The swift messenger gives you an Echolocation Charm!")
+        
+        self.player.ocean_knowledge += 1
     
-    def forest_encounter(self):
-        """Haunted Forest encounter"""
-        print("\nAs you journey through the misty forest, a pack of Shadow Wolves emerges from the darkness!")
+    def coral_maze_encounter(self):
+        """Coral Maze encounter"""
+        print("\nAs you navigate the beautiful but confusing coral formations, a school of aggressive Barracuda surrounds you!")
         
-        if not self.combat_system.start_combat("Shadow Wolf Pack", 25, 8):
+        if not self.combat_system.start_combat("Barracuda School", 25, 8, "swarm"):
             return
         
         # Reward for winning
-        print("After defeating the wolves, you find a hidden cache!")
-        self.player.inventory.append("Forest Elixir")
+        print("After defeating the barracuda, you find a hidden alcove with ocean treasures!")
+        self.player.inventory.append("Coral Elixir")
         self.player.quest_progress += 1
         
-        print("\nTwo paths lie before you: one leads to the shimmering Enchanted Castle, the other to the dangerous Bandit's Lair.")
-        choice = input("Which path do you take? (1: Castle, 2: Lair): ")
+        print("\nTwo paths branch before you: one leads downward to the dark Abyssal Trench, the other toward the warm Volcanic Vents.")
+        choice = input("Which current do you follow? (1: Trench, 2: Vents): ")
         
         if choice == "1":
-            self.move_to_area("Enchanted Castle")
+            self.move_to_location("Abyssal Trench")
         else:
-            self.move_to_area("Bandit's Lair")
+            self.move_to_location("Volcanic Vents")
     
-    def castle_encounter(self):
-        """Enchanted Castle encounter"""
-        print("\nYou approach the floating castle. A mystical guardian blocks your path.")
-        print("'Who dares approach the Castle of Magic? State your business, mortal.'")
+    def sunken_galleon_encounter(self):
+        """Sunken ship encounter"""
+        print("\nYou approach the ancient wreck. A massive Giant Moray Eel guards the entrance.")
+        print("'This is my territory, little fish! What business do you have here?'")
         
         print("\nHow do you respond?")
-        print("1. 'I seek the Crystal of Souls to restore balance!'")
-        print("2. 'I mean no harm, I only seek knowledge.'")
-        print("3. 'Step aside or face my wrath!'")
+        print("1. 'I seek the Pearl of Tides to restore ocean balance!'")
+        print("2. 'I mean no harm, I'm just exploring these ancient ruins.'")
+        print("3. 'This territory belongs to the ocean, not you! Move aside!'")
         
         choice = input("Enter your choice (1-3): ")
         
         if choice == "1":
-            print("The guardian nods. 'Your heart is pure. You may pass and learn our secrets.'")
-            self.player.magic += 2
-            self.player.inventory.append("Amulet of Wisdom")
-            print("You gain +2 Magic and receive an Amulet of Wisdom!")
-            self.player.choices_made.append("diplomatic_castle")
+            print("The moray eel studies you. 'The Pearl... I haven't heard that name in ages. If you truly seek to restore balance, you may pass.'")
+            self.player.ocean_knowledge += 2
+            self.player.inventory.append("Navigator's Sextant")
+            print("The eel gives you a Navigator's Sextant from the wreck!")
+            self.player.choices_made.append("diplomatic_galleon")
         elif choice == "2":
-            print("'Your curiosity is noted. Pass, but be warned - knowledge carries great responsibility.'")
-            self.player.inventory.append("Ancient Scroll")
-            print("You receive an Ancient Scroll!")
-            self.player.choices_made.append("curious_castle")
+            print("'Curiosity is natural, but dangerous. Very well, explore - but touch nothing that belongs to me.'")
+            self.player.inventory.append("Ancient Gold Coin")
+            print("You find an Ancient Gold Coin in the sand!")
+            self.player.choices_made.append("curious_galleon")
         else:
-            print("'Foolish mortal! You will learn respect!'")
-            if not self.combat_system.start_combat("Mystic Guardian", 35, 12):
+            print("'You dare challenge me in my own home? You will make a fine meal!'")
+            if not self.combat_system.start_combat("Giant Moray Eel", 35, 12, "venom"):
                 return
-            self.player.choices_made.append("aggressive_castle")
+            self.player.choices_made.append("aggressive_galleon")
         
         self.player.quest_progress += 2
-        self.move_to_area("Crystal Sanctum")
+        self.move_to_location("Giant Clam Gardens")
     
-    def bandit_encounter(self):
-        """Bandit's Lair encounter"""
-        print("\nYou sneak into the bandit camp. The bandit leader confronts you!")
-        print("'Well, well, what do we have here? Looking to join our merry band or looking for trouble?'")
+    def abyssal_trench_encounter(self):
+        """Deep trench encounter"""
+        print("\nYou descend into the darkness. Strange, glowing anglerfish appear, their lights bobbing in the gloom.")
         
-        print("\nHow do you respond?")
-        print("1. 'I'm here to put an end to your crimes!'")
-        print("2. 'I seek passage to Dragon's Peak. Let me through and no one gets hurt.'")
-        print("3. 'Actually, I was hoping to join your crew...'")
-        
-        choice = input("Enter your choice (1-3): ")
-        
-        if choice == "1":
-            print("'Then you'll die like all the other heroes!'")
-            if not self.combat_system.start_combat("Bandit Leader", 40, 10):
-                return
-            self.player.choices_made.append("heroic_bandits")
-            print("After defeating the bandits, you find a treasure chest!")
-            self.player.inventory.append("Golden Locket")
-        elif choice == "2":
-            if self.player.strength >= 12:
-                print("The bandit leader sizes you up. 'You look tough enough. Fine, pass through, but don't cause trouble.'")
-                self.player.choices_made.append("intimidating_bandits")
-            else:
-                print("The bandit leader laughs. 'You think you can threaten me? Get him, boys!'")
-                if not self.combat_system.start_combat("Bandit Leader", 40, 10):
-                    return
-                self.player.choices_made.append("failed_intimidate_bandits")
-        else:
-            print("'Is that so? Prove your worth by taking care of my... dragon problem at the peak.'")
-            self.player.choices_made.append("joined_bandits")
-            print("The bandits let you pass to Dragon's Peak.")
-        
-        self.player.quest_progress += 2
-        self.move_to_area("Dragon's Peak")
-    
-    def dragon_encounter(self):
-        """Dragon's Peak encounter - major branching point"""
-        print("\nYou stand before Vermithrax, the ancient dragon. His scales shimmer like molten gold.")
-        print("'MORTAL! WHY DO YOU DISTURB MY SLUMBER? DO YOU SEEK DEATH OR SOMETHING MORE?'")
-        
-        print("\nHow do you approach the dragon?")
-        print("1. 'I'm here to claim your hoard, lizard!' (Attack)")
-        print("2. 'Great Vermithrax, I seek the Crystal to save our world.' (Diplomacy)")
-        print("3. 'The bandits sent me to deal with you.' (If you joined bandits)")
-        
-        choice = input("Enter your choice (1-3): ")
-        
-        if choice == "1":
-            print("'FOOLISH MORTAL! YOU WILL BURN!'")
-            if not self.combat_system.start_combat("Ancient Dragon Vermithrax", 60, 15):
-                return
-            self.player.choices_made.append("killed_dragon")
-            print("With the dragon defeated, you find a path to the Crystal Sanctum behind its hoard.")
-            self.move_to_area("Crystal Sanctum")
-        
-        elif choice == "2":
-            print("The dragon regards you curiously. 'A BRAVE SOUL... TELL ME, WHY SHOULD I TRUST YOU?'")
-            
-            if "Amulet of Wisdom" in self.player.inventory or "Ancient Scroll" in self.player.inventory:
-                print("You show the dragon your magical artifact as proof of your wisdom.")
-                print("'I SEE YOU HAVE EARNED THE TRUST OF THE MYSTICS. VERY WELL, I WILL ALLOW YOU PASSAGE.'")
-                self.player.choices_made.append("befriended_dragon")
-                print("Vermithrax creates a magical portal to the Crystal Sanctum for you.")
-                self.move_to_area("Crystal Sanctum")
-            else:
-                print("The dragon senses uncertainty in you. 'YOUR WORDS ARE EMPTY! PROVE YOUR WORTH IN COMBAT!'")
-                if not self.combat_system.start_combat("Ancient Dragon Vermithrax", 50, 12):
-                    return
-                self.player.choices_made.append("earned_dragon_respect")
-                print("The dragon, impressed by your strength, allows you passage.")
-                self.move_to_area("Crystal Sanctum")
-        
-        elif choice == "3" and "joined_bandits" in self.player.choices_made:
-            print("'THE BANDITS DARE SEND AN ASSASSIN? THEY WILL PAY FOR THIS INSULT!'")
-            if not self.combat_system.start_combat("Enraged Dragon Vermithrax", 55, 18):
-                return
-            self.player.choices_made.append("betrayed_bandits_dragon")
-            print("With the dragon defeated, you return to the bandits...")
-            self.bandit_betrayal_ending()
-        else:
-            print("Invalid choice! The dragon grows impatient.")
-            self.dragon_encounter()
-    
-    def bandit_betrayal_ending(self):
-        """Special ending if player betrays bandits"""
-        print("\nYou return to the bandit camp with proof of the dragon's defeat.")
-        print("The bandit leader celebrates: 'You did it! You're one of us now! Here's your share of the treasure.'")
-        print("But as he turns his back, you see your opportunity...")
-        
-        choice = input("Do you: (1) Take the treasure and leave, (2) Betray the bandits and arrest them: ")
-        
-        if choice == "1":
-            print("\n=== ENDING: BANDIT KING/QUEEN ===")
-            print("You embrace the life of a bandit, becoming a legendary outlaw.")
-            print("The Crystal of Souls remains corrupted, but you have gold and infamy.")
-            self.game_over()
-        else:
-            print("\nYou reveal you're working with the royal guards and arrest the bandits!")
-            print("=== ENDING: HERO OF THE REALM ===")
-            print("You're celebrated as a hero who infiltrated and dismantled the bandit organization.")
-            self.game_over()
-    
-    def sanctum_encounter(self):
-        """Final area encounter - determines ending"""
-        print("\nYou stand before the Crystal of Souls, pulsating with corrupted energy.")
-        print("A dark figure emerges from the shadows - the Corruptor who poisoned the crystal!")
-        
-        if "befriended_dragon" in self.player.choices_made:
-            print("Suddenly, Vermithrax appears behind you! 'I TOLD YOU I WOULD HELP, MORTAL!'")
-            print("The dragon breathes fire on the Corruptor, weakening him significantly!")
-            enemy_health = 40
-        else:
-            enemy_health = 60
-        
-        if not self.combat_system.start_combat("The Corruptor", enemy_health, 12):
+        if not self.combat_system.start_combat("Anglerfish Pack", 30, 10, "lure"):
             return
         
-        print("\nWith the Corruptor defeated, the Crystal of Souls begins to stabilize.")
+        print("After defeating the anglerfish, you notice a deep cave entrance glowing with faint blue light.")
+        self.player.inventory.append("Bioluminescent Fungus")
+        self.player.choices_made.append("explored_trench")
+        self.player.quest_progress += 2
+        self.move_to_location("Kraken's Lair")
+    
+    def volcanic_vents_encounter(self):
+        """Volcanic vents encounter"""
+        print("\nThe warm, mineral-rich waters feel strange. Suddenly, a pack of vicious Vent Crabs scuttle from the rocks!")
+        
+        if not self.combat_system.start_combat("Vent Crab Colony", 28, 9, "constrict"):
+            return
+        
+        print("The defeated crabs retreat, revealing a path to an even hotter area where immense creatures dwell.")
+        self.player.inventory.append("Volcanic Shard")
+        self.player.choices_made.append("explored_vents")
+        self.player.quest_progress += 2
+        self.move_to_location("Leviathan's Domain")
+    
+    def clam_gardens_encounter(self):
+        """Giant clam gardens encounter"""
+        print("\nYou arrive at the magnificent clam gardens. The largest clam you've ever seen opens slowly.")
+        print("A soft voice echoes in your mind: 'I am the Ancient Clam, guardian of pearls and wisdom. Why do you disturb my meditation?'")
+        
+        print("\nHow do you respond?")
+        print("1. 'I seek knowledge about the Pearl of Tides and the ocean's imbalance.'")
+        print("2. 'I've heard tales of your incredible pearls. I wish to see them.'")
+        print("3. 'Your pearls would make me powerful. Give them to me!'")
+        
+        choice = input("Enter your choice (1-3): ")
+        
+        if choice == "1":
+            print("'The Pearl of Tides... yes, I remember when the Leviathan guarded it. The Kraken grew jealous and stole it, corrupting its power.'")
+            self.player.ocean_knowledge += 3
+            self.player.inventory.append("Pearl of Wisdom")
+            print("The Ancient Clam gives you a Pearl of Wisdom!")
+            self.player.choices_made.append("wise_clam")
+        elif choice == "2":
+            print("'Beauty calls to beauty, I see. Very well, behold...' The clam reveals a magnificent pearl.")
+            self.player.inventory.append("Iridescent Pearl")
+            print("The clam lets you take a beautiful Iridescent Pearl!")
+            self.player.choices_made.append("appreciative_clam")
+        else:
+            print("'Greed consumes you as it consumed the Kraken. I cannot help one so blind.'")
+            print("The clam closes abruptly, and you must find your own way forward.")
+            self.player.choices_made.append("greedy_clam")
+        
+        # From here, the player learns they must confront either Kraken or Leviathan
+        print("\nThe Ancient Clam's wisdom reveals two paths: confront the Kraken who stole the Pearl, or seek the Leviathan who once guarded it.")
+        final_choice = input("Which ancient being will you seek? (1: Kraken, 2: Leviathan): ")
+        
+        if final_choice == "1":
+            self.move_to_location("Kraken's Lair")
+        else:
+            self.move_to_location("Leviathan's Domain")
+    
+    def kraken_encounter(self):
+        """Kraken encounter - major branching point"""
+        print("\nYou enter the Kraken's Lair. The massive cephalopod towers before you, the corrupted Pearl of Tides glowing angrily in one tentacle.")
+        print("'INTERLOPER! YOU DARE CHALLENGE ME IN MY DOMAIN? THE PEARL IS MINE NOW!'")
+        
+        print("\nHow do you approach the Kraken?")
+        print("1. 'I'm here to take back what you stole, monster!' (Attack)")
+        print("2. 'Great Kraken, the Pearl corrupts you. Let me help restore balance.' (Diplomacy)")
+        print("3. 'I can help you master the Pearl's power instead of fighting it.' (Corruption)")
+        
+        choice = input("Enter your choice (1-3): ")
+        
+        if choice == "1":
+            print("'FOOLISH CREATURE! YOU WILL JOIN THE BONES THAT DECORATE MY LAIR!'")
+            if not self.combat_system.start_combat("The Kraken", 60, 15, "tentacles"):
+                return
+            self.player.choices_made.append("defeated_kraken")
+            print("With the Kraken defeated, you claim the Pearl of Tides!")
+            self.move_to_location("Leviathan's Domain")
+        
+        elif choice == "2":
+            print("The Kraken's tentacles twitch nervously. 'BALANCE? THE OCEAN HAS NEVER BEEN BALANCED! WHY SHOULD I LISTEN TO YOU?'")
+            
+            if "Pearl of Wisdom" in self.player.inventory or self.player.ocean_knowledge >= 5:
+                print("You share the wisdom you've gained from your journey.")
+                print("'YOU... UNDERSTAND. PERHAPS... PERHAPS THE PEARL HAS BEEN BURNING ME.'")
+                self.player.choices_made.append("redeemed_kraken")
+                print("The Kraken reluctantly gives you the Pearl of Tides.")
+                self.move_to_location("Leviathan's Domain")
+            else:
+                print("The Kraken senses your uncertainty. 'YOUR WORDS ARE EMPTY! YOU KNOW NOTHING OF TRUE POWER!'")
+                if not self.combat_system.start_combat("Enraged Kraken", 50, 12, "ink_cloud"):
+                    return
+                self.player.choices_made.append("forced_kraken")
+                print("The Kraken, beaten but not broken, surrenders the Pearl.")
+                self.move_to_location("Leviathan's Domain")
+        
+        elif choice == "3":
+            print("'YOU OFFER PARTNERSHIP? INTERESTING... TOGETHER WE COULD RULE ALL CURRENTS.'")
+            self.player.choices_made.append("joined_kraken")
+            self.kraken_alliance_ending()
+        else:
+            print("Invalid choice! The Kraken grows impatient.")
+            self.kraken_encounter()
+    
+    def leviathan_encounter(self):
+        """Final area encounter - determines ending"""
+        print("\nYou enter the Leviathan's Domain. The ancient whale-like being floats majestically, its size unimaginable.")
+        
+        if "defeated_kraken" in self.player.choices_made or "redeemed_kraken" in self.player.choices_made or "forced_kraken" in self.player.choices_made:
+            print("You hold the Pearl of Tides before the Leviathan.")
+            print("'YOU HAVE RETURNED WHAT WAS LOST. BUT THE CORRUPTION LINGERS... WHO WILL BEAR THE BURDEN OF PROTECTION NOW?'")
+        else:
+            print("The Leviathan regards you with ancient eyes.")
+            print("'YOU SEEK THE PEARL, YET IT REMAINS WITH THE KRAKEN. HAVE YOU COME TO SEEK MY HELP OR MY JUDGMENT?'")
+        
         self.determine_ending()
+    
+    def kraken_alliance_ending(self):
+        """Special ending if player allies with Kraken"""
+        print("\nYou and the Kraken plot to dominate the ocean currents.")
+        print("With the Pearl's corrupted power, you begin your campaign...")
+        
+        choice = input("Do you: (1) Rule together as equals, (2) Betray the Kraken and take all power: ")
+        
+        if choice == "1":
+            print("\n=== ENDING: OCEAN TYRANTS ===")
+            print("You and the Kraken establish a ruthless regime, controlling all ocean currents.")
+            print("The Coral Kingdom lives in fear, but the seas are orderly under your iron fins.")
+            self.game_over()
+        else:
+            print("\nYou wait for the perfect moment, then turn on the Kraken when it least expects it!")
+            print("=== ENDING: SOLE MONARCH OF THE DEEP ===")
+            print("With the Kraken defeated and the Pearl in your possession, you rule the entire ocean alone.")
+            print("Your name is whispered in fear from the shallowest reef to the deepest trench.")
+            self.game_over()
     
     def determine_ending(self):
         """Determine which ending the player gets based on choices"""
-        print("\n=== THE CRYSTAL OF SOULS IS SAVED! ===")
+        print("\n=== THE PEARL OF TIDES GLOWS BEFORE YOU ===")
         
         # Count different types of choices
-        heroic_choices = sum(1 for choice in self.player.choices_made if "heroic" in choice or "diplomatic" in choice)
-        neutral_choices = sum(1 for choice in self.player.choices_made if "curious" in choice or "intimidating" in choice)
-        dark_choices = sum(1 for choice in self.player.choices_made if "aggressive" in choice or "joined" in choice or "killed" in choice)
+        wise_choices = sum(1 for choice in self.player.choices_made if "diplomatic" in choice or "wise" in choice or "redeemed" in choice)
+        neutral_choices = sum(1 for choice in self.player.choices_made if "curious" in choice or "appreciative" in choice or "explored" in choice)
+        corrupt_choices = sum(1 for choice in self.player.choices_made if "aggressive" in choice or "greedy" in choice or "joined" in choice or "forced" in choice)
         
-        if heroic_choices > dark_choices and heroic_choices >= neutral_choices:
-            self.hero_ending()
-        elif dark_choices > heroic_choices and dark_choices > neutral_choices:
-            self.dark_ending()
+        if wise_choices > corrupt_choices and wise_choices >= neutral_choices:
+            self.wisdom_ending()
+        elif corrupt_choices > wise_choices and corrupt_choices > neutral_choices:
+            self.corruption_ending()
         else:
-            self.neutral_ending()
+            self.balance_ending()
     
-    def hero_ending(self):
-        """The heroic ending"""
-        print("\n=== ENDING: TRUE HERO OF ELDORIA ===")
-        print("Through compassion, bravery, and wisdom, you have saved Eldoria.")
-        print("The Crystal of Souls shines brightly once more, and peace returns to the land.")
-        print("Bards sing songs of your deeds for generations to come.")
-        print("You are remembered as the hero who restored balance through courage and mercy.")
+    def wisdom_ending(self):
+        """The wisdom ending"""
+        print("\n=== ENDING: OCEAN SAGE ===")
+        print("Through wisdom, patience, and understanding, you restore the Pearl of Tides to its rightful purpose.")
+        print("The ocean currents flow true once more, and all marine life celebrates your wisdom.")
+        print("You become a legendary sage whose counsel is sought by creatures great and small.")
+        print("The Coral Kingdom enters a new age of prosperity and harmony.")
         self.game_over()
     
-    def dark_ending(self):
-        """The dark ending"""
-        print("\n=== ENDING: THE NEW CORRUPTOR ===")
-        print("You touch the Crystal of Souls, but the corruption seeks a new host...")
-        print("Instead of purifying it, you absorb its power for yourself.")
-        print("Eldoria now has a new master - one who rules through fear and power.")
-        print("The cycle of corruption continues, but now you sit on the throne.")
+    def corruption_ending(self):
+        """The corruption ending"""
+        print("\n=== ENDING: ABYSSAL MONARCH ===")
+        print("You touch the Pearl of Tides, but its corruption seeks a new host...")
+        print("Instead of purifying it, you embrace its power and make it your own.")
+        print("The ocean now has a new master - one who rules through might and fear.")
+        print("The currents obey your will, but the sea has lost its natural balance.")
         self.game_over()
     
-    def neutral_ending(self):
-        """The neutral ending"""
-        print("\n=== ENDING: GUARDIAN OF THE CRYSTAL ===")
-        print("You purify the Crystal of Souls but choose to remain as its guardian.")
-        print("You watch over Eldoria from the shadows, intervening only when necessary.")
-        print("The world knows peace, but few remember the adventurer who saved them.")
-        print("You find contentment in knowing the world is safe, even if unknown.")
+    def balance_ending(self):
+        """The balance ending"""
+        print("\n=== ENDING: GUARDIAN OF CURRENTS ===")
+        print("You purify the Pearl of Tides and establish a new order of guardians.")
+        print("Representatives from all ocean species work together to protect the Pearl.")
+        print("The ocean finds a new balance between freedom and order, might and wisdom.")
+        print("You fade into legend, known only as the one who taught the sea to protect itself.")
         self.game_over()
     
-    def move_to_area(self, area_name):
-        """Move player to a new area"""
-        if area_name in self.areas:
-            self.player.current_area = area_name
-            print(f"\nYou travel to {area_name}...")
+    def move_to_location(self, location_name):
+        """Move player to a new location"""
+        if location_name in self.locations:
+            self.player.current_location = location_name
+            print(f"\nYou swim to {location_name}...")
             time.sleep(1)
         else:
-            print("You cannot travel to that area.")
+            print("You cannot travel to that location.")
     
     def game_over(self):
         """End the game"""
-        print(f"\nThank you for playing Eldoria: The Crystal of Souls, {self.player.name}!")
-        print(f"Your journey as a {self.player.character_class} has concluded.")
+        print(f"\nThank you for playing Coral Kingdom: The Pearl of Tides, {self.player.name}!")
+        print(f"Your journey as a {self.player.species} has concluded.")
         sys.exit(0)
 
 def main():
     """Main game function"""
-    print("=" * 50)
-    print("    ELDORIA: THE CRYSTAL OF SOULS")
-    print("        A Text-Based RPG Adventure")
-    print("=" * 50)
     
-    player = Player()
+    player = MarineCreature()
     player.create_character()
     
-    game_world = GameWorld(player)
+    reef_world = ReefWorld(player)
     
-    print("\nYour adventure begins now! Type 'help' for commands.")
+    print("\nYour aquatic adventure begins now! Type 'help' for commands.")
     
     # Main game loop
     while player.health > 0:
-        print(f"\nYou are in: {player.current_area}")
+        print(f"\nCurrent Location: {player.current_location}")
         command = input("\nWhat would you like to do? ").lower().strip()
         
         if command in ['quit', 'exit']:
-            print("Thanks for playing!")
+            print("Thanks for exploring the Coral Kingdom!")
             break
         
         elif command == 'help':
-            print("\n=== AVAILABLE COMMANDS ===")
+            print("\n=== OCEAN COMMANDS ===")
             print("help - Show this help message")
-            print("stats - Show your character stats")
-            print("inventory - Show your inventory")
+            print("stats - Show your creature stats")
+            print("inventory - Show your ocean treasures")
             print("use [item] - Use an item from inventory")
-            print("explore - Explore current area")
-            print("travel - Show available travel locations")
+            print("explore - Explore current location")
+            print("travel - Show available swim paths")
             print("quit - Exit the game")
         
         elif command == 'stats':
@@ -613,27 +662,27 @@ def main():
                 print("Usage: use [item number from inventory]")
         
         elif command == 'explore':
-            game_world.display_current_area()
+            reef_world.display_current_location()
         
         elif command == 'travel':
-            current_area_data = game_world.areas[player.current_area]
-            print(f"\nFrom {player.current_area} you can travel to:")
-            for area in current_area_data["connections"]:
-                print(f"- {area}")
+            current_location_data = reef_world.locations[player.current_location]
+            print(f"\nFrom {player.current_location} you can swim to:")
+            for location in current_location_data["connections"]:
+                print(f"- {location}")
             
-            destination = input("\nWhere would you like to go? (or 'cancel'): ")
-            if destination in current_area_data["connections"]:
-                game_world.move_to_area(destination)
-                game_world.display_current_area()
+            destination = input("\nWhere would you like to swim? (or 'cancel'): ")
+            if destination in current_location_data["connections"]:
+                reef_world.move_to_location(destination)
+                reef_world.display_current_location()
             elif destination != 'cancel':
-                print("You cannot travel to that location from here.")
+                print("You cannot swim to that location from here.")
         
         else:
             print("I don't understand that command. Type 'help' for available commands.")
     
     if player.health <= 0:
-        print("\n=== GAME OVER ===")
-        print("Your journey has ended...")
+        print("\n=== OCEAN'S EMBRACE ===")
+        print("Your journey ends in the deep...")
 
 if __name__ == "__main__":
     main()
